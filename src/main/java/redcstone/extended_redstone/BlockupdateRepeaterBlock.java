@@ -60,8 +60,8 @@ public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
     }
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         if (state.canPlaceAt(world, pos)) {
-            boolean bl2 = this.hasPower(world, pos, state);
-            if (bl2)
+            boolean hasPower = this.hasPower(world, pos, state);
+            if (hasPower)
                 world.addSyncedBlockEvent(pos, this, 0, 1);
             else
                 world.addSyncedBlockEvent(pos, this, 0, 0);
@@ -88,11 +88,17 @@ public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
 
     public void scheduledUpdate(BlockState state, ServerWorld world, BlockPos pos, int data) {
         if (!this.isLocked(world, pos, state)) {
-            boolean bl = (Boolean)state.get(POWERED);
-            if (bl && data == 0) {
+            boolean isPowered = (Boolean)state.get(POWERED);
+            boolean hasPower = this.hasPower(world, pos, state);
+
+            if (isPowered && data == 0) {
                 world.setBlockState(pos, (BlockState)state.with(POWERED, false), 2);
-            } else if (!bl && data == 1) {
+                if (hasPower)
+                    world.addSyncedBlockEvent(pos, this, 0, 1);
+            } else if (!isPowered && data == 1) {
                 world.setBlockState(pos, (BlockState)state.with(POWERED, true), 2);
+                if (!hasPower)
+                    world.addSyncedBlockEvent(pos, this, 0, 0);
             }
             updateNeighbors(world, pos);
         }
