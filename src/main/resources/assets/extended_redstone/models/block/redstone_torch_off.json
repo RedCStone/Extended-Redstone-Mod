@@ -1,0 +1,6 @@
+{
+  "parent": "extended_redstone:block/template_torch",
+  "textures": {
+    "torch": "extended_redstone:block/redstone_torch_off"
+  }
+}

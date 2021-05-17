@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "extended_redstone",
+  "version": "${version}",
+  "name": "Extended Redstone",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/extended_redstone/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "redcstone.extended_redstone.client.Extended_redstoneClient"
+    ],
+    "main": [
+      "redcstone.extended_redstone.Extended_redstone"
+    ]
+  },
+  "mixins": [
+    "extended_redstone.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.16.5"
+  }
+}

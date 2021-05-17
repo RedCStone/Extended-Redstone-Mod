@@ -1,0 +1,8 @@
+{
+  "parent": "extended_redstone:block/template_piston",
+  "textures": {
+    "platform": "extended_redstone:block/piston_top",
+    "bottom": "extended_redstone:block/blackstone_piston_bottom",
+    "side": "extended_redstone:block/blackstone_piston_side"
+  }
+}

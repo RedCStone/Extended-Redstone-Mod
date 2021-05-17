@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "extended_redstone:block/piston_top_sticky",
+    "bottom": "extended_redstone:block/blackstone_piston_bottom",
+    "side": "extended_redstone:block/blackstone_piston_side"
+  }
+}

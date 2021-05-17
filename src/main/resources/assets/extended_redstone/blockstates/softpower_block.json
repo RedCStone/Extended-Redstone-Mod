@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "extended_redstone:block/softpower_block",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "extended_redstone:block/softpower_block",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "extended_redstone:block/softpower_block"
+    },
+    "facing=south": {
+      "model": "extended_redstone:block/softpower_block",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "extended_redstone:block/softpower_block",
+      "x": 270
+    },
+    "facing=west": {
+      "model": "extended_redstone:block/softpower_block",
+      "y": 270
+    }
+  }
+}

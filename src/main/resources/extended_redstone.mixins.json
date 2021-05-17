@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "redcstone.extended_redstone.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BlackstonePiston.PistonBlockEntityMixin",
+    "BlackstonePiston.PistonBlockEntityRendererMixin",
+    "BlackstonePiston.PistonBlockMixin",
+    "BlackstonePiston.PistonHeadBlockMixin",
+    "BlockupdateRepeater.RedstoneWireBlockMixin",
+    "SoftPowerBlock.WorldMixin",
+    "StairDirectionalSolidness.RedstoneWireBlockMixin",
+    "StairDirectionalSolidness.WorldMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
