@@ -52,6 +52,6 @@ public class Extended_redstone implements ModInitializer {
     }
 
     private static SoftPowerBlock createSoftpowerBlock() {
-        return new SoftPowerBlock(AbstractBlock.Settings.of(Material.PISTON).strength(1.5F).solidBlock(Extended_redstone::never));
+        return new SoftPowerBlock(AbstractBlock.Settings.of(Material.GLASS).strength(1.5F).solidBlock(Extended_redstone::never));
     }
 }
