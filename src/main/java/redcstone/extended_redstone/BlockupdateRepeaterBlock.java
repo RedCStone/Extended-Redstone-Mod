@@ -63,9 +63,10 @@ public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         if (state.canPlaceAt(world, pos)) {
             boolean hasPower = this.hasPower(world, pos, state);
-            if (hasPower)
+            boolean isPowered = (Boolean)state.get(POWERED);
+            if (hasPower && !isPowered)
                 world.addSyncedBlockEvent(pos, this, 0, 1);
-            else
+            else if (!hasPower && isPowered)
                 world.addSyncedBlockEvent(pos, this, 0, 0);
         } else {
             BlockEntity blockEntity = this.hasBlockEntity() ? world.getBlockEntity(pos) : null;
