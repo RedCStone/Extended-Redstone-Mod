@@ -42,7 +42,7 @@ public class SoftPowerBlock extends FacingBlock {
 
     private void updateNeighbors(World world, BlockPos pos) {
         if (world.getBlockState(pos).isOf(this)) {
-            world.updateNeighbor(pos, this, pos.offset(world.getBlockState(pos).get(FACING)));
+            world.updateNeighbor(pos.offset(world.getBlockState(pos).get(FACING)), this, pos);
 
             world.updateNeighborsExcept(pos.offset(world.getBlockState(pos).get(FACING)), this, world.getBlockState(pos).get(FACING).getOpposite());
         }
