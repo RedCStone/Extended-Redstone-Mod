@@ -42,8 +42,6 @@ public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
     public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data) {
         if (world.isClient)
             return true;
-
-        updateNeighbors(world, pos);
         if (type == 0){
             BLOCKUPDATECOUNT = this.getUpdateDelayInternal(state);
             world.addSyncedBlockEvent(pos, this, 1, data);
@@ -80,7 +78,11 @@ public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
     }
     private void updateNeighbors(World world, BlockPos pos) {
         if (world.getBlockState(pos).isOf(this)) {
+            //world.updateNeighborsAlways(pos, this);
 
+            /*for (Direction direction : Direction.values()) {
+                world.updateNeighborsExcept(pos.offset(direction), this, direction.getOpposite());
+            }*/
 
         }
     }
@@ -99,6 +101,7 @@ public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
                 if (!hasPower)
                     world.addSyncedBlockEvent(pos, this, 0, 0);
             }
+            updateNeighbors(world, pos);
         }
     }
 

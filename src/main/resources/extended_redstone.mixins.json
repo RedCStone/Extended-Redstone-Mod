@@ -9,7 +9,6 @@
     "BlackstonePiston.PistonBlockMixin",
     "BlackstonePiston.PistonHeadBlockMixin",
     "BlockupdateRepeater.RedstoneWireBlockMixin",
-    "BlockupdateRepeater.ServerWorldMixin",
     "SoftPowerBlock.WorldMixin",
     "StairDirectionalSolidness.RedstoneWireBlockMixin",
     "StairDirectionalSolidness.WorldMixin"
