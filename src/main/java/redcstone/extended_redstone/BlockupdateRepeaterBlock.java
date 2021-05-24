@@ -1,17 +1,12 @@
 package redcstone.extended_redstone;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.AbstractRedstoneGateBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -21,6 +16,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
@@ -29,7 +25,6 @@ import java.util.Random;
 
 public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
     public static final BooleanProperty LOCKED;
-    private int BLOCKUPDATECOUNT = 0;
 
     public BlockupdateRepeaterBlock(AbstractBlock.Settings settings) {
         super(settings);
@@ -39,33 +34,16 @@ public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
 
 
 
-    public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data) {
-        if (world.isClient)
-            return true;
-        if (type == 0){
-            BLOCKUPDATECOUNT = this.getUpdateDelayInternal(state);
-            world.addSyncedBlockEvent(pos, this, 1, data);
-        }
-        else if (type == 1){
-            if (BLOCKUPDATECOUNT == 0)
-                world.addSyncedBlockEvent(pos, this, 2, data);
-            else {
-                world.addSyncedBlockEvent(pos, this, 1, data);
-                BLOCKUPDATECOUNT--;
-            }
-        }
-        else if (type == 2)
-            scheduledUpdate(state, (ServerWorld) world, pos, data);
-        return true;
-    }
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         if (state.canPlaceAt(world, pos)) {
             boolean hasPower = this.hasPower(world, pos, state);
             boolean isPowered = (Boolean)state.get(POWERED);
-            if (hasPower && !isPowered)
-                world.addSyncedBlockEvent(pos, this, 0, 1);
-            else if (!hasPower && isPowered)
-                world.addSyncedBlockEvent(pos, this, 0, 0);
+            if (hasPower && !isPowered) {
+                world.addSyncedBlockEvent(pos, this, getUpdateDelayInternal(state), 1);
+            }
+            else if (!hasPower && isPowered) {
+                world.addSyncedBlockEvent(pos, this, getUpdateDelayInternal(state), 0);
+            }
         } else {
             BlockEntity blockEntity = this.hasBlockEntity() ? world.getBlockEntity(pos) : null;
             dropStacks(state, world, pos, blockEntity);
@@ -76,15 +54,15 @@ public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
             }
         }
     }
-    private void updateNeighbors(World world, BlockPos pos) {
-        if (world.getBlockState(pos).isOf(this)) {
-            //world.updateNeighborsAlways(pos, this);
 
-            /*for (Direction direction : Direction.values()) {
-                world.updateNeighborsExcept(pos.offset(direction), this, direction.getOpposite());
-            }*/
-
-        }
+    public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data) {
+        if (world.isClient)
+            return true;
+        if (type == 0)
+            scheduledUpdate(state, (ServerWorld) world, pos, data);
+        else if (type > 0)
+            world.addSyncedBlockEvent(pos, this, type - 1, data);
+        return true;
     }
 
     public void scheduledUpdate(BlockState state, ServerWorld world, BlockPos pos, int data) {
@@ -95,35 +73,40 @@ public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
             if (isPowered && data == 0) {
                 world.setBlockState(pos, (BlockState)state.with(POWERED, false), 2);
                 if (hasPower)
-                    world.addSyncedBlockEvent(pos, this, 0, 1);
+                    world.addSyncedBlockEvent(pos, this, getUpdateDelayInternal(state), 1);
+                updateNeighbors(world,pos,state);
             } else if (!isPowered && data == 1) {
                 world.setBlockState(pos, (BlockState)state.with(POWERED, true), 2);
                 if (!hasPower)
-                    world.addSyncedBlockEvent(pos, this, 0, 0);
+                    world.addSyncedBlockEvent(pos, this, getUpdateDelayInternal(state), 0);
+                updateNeighbors(world,pos,state);
             }
-            updateNeighbors(world, pos);
+
         }
     }
-
+    public void updateNeighbors(World world, BlockPos pos, BlockState state)
+    {
+        if (world.isClient())
+            return;
+        world.updateNeighborsAlways(pos, this);
+        world.updateNeighborsExcept(pos.offset(state.get(FACING)), this, state.get(FACING).getOpposite());
+    }
 
 
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         scheduledUpdate(state, world, pos, 0);
     }
 
-    protected void updateTarget(World world, BlockPos pos, BlockState state) {
-        Direction direction = (Direction)state.get(FACING);
-        BlockPos blockPos = pos.offset(direction.getOpposite());
-        world.updateNeighbor(blockPos, this, pos);
-        world.updateNeighborsExcept(blockPos, this, direction);
+    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
+        if (!(Boolean)state.get(POWERED)) {
+            return 0;
+        } else {
+            return state.get(FACING) == direction ? this.getOutputLevel(world, pos, state) : 0;
+        }
     }
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!player.abilities.allowModifyWorld) {
-            return ActionResult.PASS;
-        } else {
-            return ActionResult.success(world.isClient);
-        }
+        return ActionResult.PASS;
     }
 
     protected int getUpdateDelayInternal(BlockState state) { return 3; }
