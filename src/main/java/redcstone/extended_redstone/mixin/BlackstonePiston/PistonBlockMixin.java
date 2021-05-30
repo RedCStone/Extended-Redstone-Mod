@@ -25,7 +25,7 @@ import static net.minecraft.block.PistonBlock.EXTENDED;
 @Mixin(PistonBlock.class)
 public abstract class PistonBlockMixin {
     @Shadow
-    protected boolean move(World world, BlockPos pos, Direction dir, boolean retract) {
+    private boolean move(World world, BlockPos pos, Direction dir, boolean retract) {
         return false;
     }
     @Shadow
