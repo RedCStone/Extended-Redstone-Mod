@@ -26,6 +26,6 @@ public class HalfTickRepeaterBlock extends RepeaterBlock {
 
     @Override
     protected int getUpdateDelayInternal(BlockState state) {
-        return (Integer)state.get(DELAY);
+        return (Integer)state.get(DELAY) * 2 - 1;
     }
 }
