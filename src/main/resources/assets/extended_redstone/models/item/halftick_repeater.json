@@ -1,6 +1,6 @@
 {
   "parent": "extended_redstone:item/generated",
   "textures": {
-    "layer0": "extended_redstone:item/blockupdate_repeater"
+    "layer0": "extended_redstone:item/halftick_repeater"
   }
 }

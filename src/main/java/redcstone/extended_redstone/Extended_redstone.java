@@ -16,12 +16,14 @@ public class Extended_redstone implements ModInitializer {
     public static final Block BLACKSTONE_STICKY_PISTON;
     public static final Block SOFTPOWER_BLOCK;
     public static final Block BLOCKUPDATE_REPEATER;
+    public static final Block HALFTICK_REPEATER;
 
     static {
         BLACKSTONE_PISTON = createBlackstonePistonBlock(false);
         BLACKSTONE_STICKY_PISTON = createBlackstonePistonBlock(true);
         SOFTPOWER_BLOCK = createSoftpowerBlock();
         BLOCKUPDATE_REPEATER = new BlockupdateRepeaterBlock(FabricBlockSettings.of(Material.PISTON));
+        HALFTICK_REPEATER = new HalfTickRepeaterBlock(FabricBlockSettings.of(Material.PISTON));
     }
 
 
@@ -38,6 +40,9 @@ public class Extended_redstone implements ModInitializer {
 
         Registry.register(Registry.BLOCK, new Identifier("extended_redstone", "blockupdate_repeater"), BLOCKUPDATE_REPEATER);
         Registry.register(Registry.ITEM, new Identifier("extended_redstone", "blockupdate_repeater"), new BlockItem(BLOCKUPDATE_REPEATER, new FabricItemSettings().group(ItemGroup.REDSTONE)));
+
+        Registry.register(Registry.BLOCK, new Identifier("extended_redstone", "halftick_repeater"), HALFTICK_REPEATER);
+        Registry.register(Registry.ITEM, new Identifier("extended_redstone", "halftick_repeater"), new BlockItem(HALFTICK_REPEATER, new FabricItemSettings().group(ItemGroup.REDSTONE)));
     }
 
     private static boolean never(BlockState state, BlockView world, BlockPos pos) {
