@@ -15,7 +15,7 @@ import redcstone.extended_redstone.Extended_redstone;
 @Mixin(World.class)
 public class WorldMixin {
     @Shadow
-    BlockState getBlockState(BlockPos pos){
+    public BlockState getBlockState(BlockPos pos){
         return null;
     };
 

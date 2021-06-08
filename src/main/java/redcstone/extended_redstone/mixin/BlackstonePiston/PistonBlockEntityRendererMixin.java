@@ -23,7 +23,7 @@ import redcstone.extended_redstone.Extended_redstone;
 public class PistonBlockEntityRendererMixin {
 
     @Shadow
-    private void method_3575(BlockPos blockPos, BlockState blockState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, World world, boolean bl, int i){}
+    private void renderModel(BlockPos blockPos, BlockState blockState, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, World world, boolean bl, int i){}
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getDefaultState()Lnet/minecraft/block/BlockState;"), cancellable = true)
     private void RenderBlackstonePiston(PistonBlockEntity pistonBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j, CallbackInfo ci)
@@ -35,12 +35,12 @@ public class PistonBlockEntityRendererMixin {
         PistonType pistonType = blockState.isOf(Blocks.STICKY_PISTON) || blockState.isOf(Extended_redstone.BLACKSTONE_STICKY_PISTON) ? PistonType.STICKY : PistonType.DEFAULT;
         BlockState blockState2 = (BlockState)((BlockState)Blocks.PISTON_HEAD.getDefaultState().with(PistonHeadBlock.TYPE, pistonType)).with(PistonHeadBlock.FACING, blockState.get(PistonBlock.FACING));
         blockState2 = (BlockState)blockState2.with(PistonHeadBlock.SHORT, pistonBlockEntity.getProgress(f) >= 0.5F);
-        this.method_3575(blockPos, blockState2, matrixStack, vertexConsumerProvider, world, false, j);
+        this.renderModel(blockPos, blockState2, matrixStack, vertexConsumerProvider, world, false, j);
         BlockPos blockPos2 = blockPos.offset(pistonBlockEntity.getMovementDirection());
         matrixStack.pop();
         matrixStack.push();
         blockState = (BlockState)blockState.with(PistonBlock.EXTENDED, true);
-        this.method_3575(blockPos2, blockState, matrixStack, vertexConsumerProvider, world, true, j);
+        this.renderModel(blockPos2, blockState, matrixStack, vertexConsumerProvider, world, true, j);
 
         matrixStack.pop();
         BlockModelRenderer.disableBrightnessCache();

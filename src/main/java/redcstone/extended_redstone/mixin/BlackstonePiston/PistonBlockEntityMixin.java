@@ -16,9 +16,9 @@ import redcstone.extended_redstone.Extended_redstone;
 @Mixin(PistonBlockEntity.class)
 public abstract class PistonBlockEntityMixin {
     @Shadow
-    abstract boolean isExtending();
+    public abstract boolean isExtending();
     @Shadow
-    abstract boolean isSource();
+    public abstract boolean isSource();
     @Shadow
     private BlockState pushedBlock;
     @Shadow
