@@ -32,7 +32,7 @@ public class SoftPowerBlock extends FacingBlock {
 
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         if (!world.isClient) {
-            if (!block.is(this))
+            if (!world.getBlockState(fromPos).isOf(this))
                 update(world, pos, state);
         }
     }

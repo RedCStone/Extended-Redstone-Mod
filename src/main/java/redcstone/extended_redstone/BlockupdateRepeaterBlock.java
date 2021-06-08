@@ -45,7 +45,7 @@ public class BlockupdateRepeaterBlock extends AbstractRedstoneGateBlock {
                 world.addSyncedBlockEvent(pos, this, getUpdateDelayInternal(state), 0);
             }
         } else {
-            BlockEntity blockEntity = this.hasBlockEntity() ? world.getBlockEntity(pos) : null;
+            BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
             dropStacks(state, world, pos, blockEntity);
             world.removeBlock(pos, false);
 

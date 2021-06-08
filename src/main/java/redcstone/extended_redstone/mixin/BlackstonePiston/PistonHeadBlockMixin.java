@@ -17,7 +17,7 @@ import static net.minecraft.block.PistonHeadBlock.TYPE;
 
 @Mixin(PistonHeadBlock.class)
 public class PistonHeadBlockMixin {
-    @Inject(method = "method_26980", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "isAttached", at = @At("RETURN"), cancellable = true)
     private void isOnPistonBase(BlockState HeadBlock, BlockState BaseBlock, CallbackInfoReturnable<Boolean> cir)
     {
         Block block = HeadBlock.get(TYPE) == PistonType.DEFAULT ? Blocks.PISTON : Blocks.STICKY_PISTON;

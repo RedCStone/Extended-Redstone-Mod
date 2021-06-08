@@ -18,6 +18,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
@@ -32,7 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class BlackstonePistonBlock extends PistonBlock implements IPistonLogic {
+public class BlackstonePistonBlock extends PistonBlock {
     private final boolean sticky;
 
     public BlackstonePistonBlock(boolean sticky, AbstractBlock.Settings settings) {
@@ -136,7 +137,7 @@ public class BlackstonePistonBlock extends PistonBlock implements IPistonLogic {
 
             BlockState blockState = (BlockState)((BlockState)Blocks.MOVING_PISTON.getDefaultState().with(PistonExtensionBlock.FACING, direction)).with(PistonExtensionBlock.TYPE, this.sticky ? PistonType.STICKY : PistonType.DEFAULT);
             world.setBlockState(pos, blockState, 20);
-            world.setBlockEntity(pos, PistonExtensionBlock.createBlockEntityPiston((BlockState)this.getDefaultState().with(FACING, Direction.byId(data & 7)), direction, false, true));
+            world.addBlockEntity(PistonExtensionBlock.createBlockEntityPiston(pos, blockState, (BlockState)this.getDefaultState().with(FACING, Direction.byId(data & 7)), direction, false, true));
             world.updateNeighbors(pos, blockState.getBlock());
             blockState.updateNeighbors(world, pos, 2);
             if (this.sticky) {
@@ -199,7 +200,7 @@ public class BlackstonePistonBlock extends PistonBlock implements IPistonLogic {
                         return false;
                     }
 
-                    return !blockState.getBlock().hasBlockEntity();
+                    return !blockState.hasBlockEntity();
                 }
             } else {
                 return false;
@@ -237,41 +238,46 @@ public class BlackstonePistonBlock extends PistonBlock implements IPistonLogic {
 
             int l;
             BlockPos blockPos4;
-            BlockState blockState8;
+            BlockState blockState9;
             for(l = list3.size() - 1; l >= 0; --l) {
                 blockPos4 = (BlockPos)list3.get(l);
-                blockState8 = world.getBlockState(blockPos4);
-                BlockEntity blockEntity = blockState8.getBlock().hasBlockEntity() ? world.getBlockEntity(blockPos4) : null;
-                dropStacks(blockState8, world, blockPos4, blockEntity);
+                blockState9 = world.getBlockState(blockPos4);
+                BlockEntity blockEntity = blockState9.hasBlockEntity() ? world.getBlockEntity(blockPos4) : null;
+                dropStacks(blockState9, world, blockPos4, blockEntity);
                 world.setBlockState(blockPos4, Blocks.AIR.getDefaultState(), 18);
-                blockStates[j++] = blockState8;
+                if (!blockState9.isIn(BlockTags.FIRE)) {
+                    world.addBlockBreakParticles(blockPos4, blockState9);
+                }
+
+                blockStates[j++] = blockState9;
             }
 
             for(l = list.size() - 1; l >= 0; --l) {
                 blockPos4 = (BlockPos)list.get(l);
-                blockState8 = world.getBlockState(blockPos4);
+                blockState9 = world.getBlockState(blockPos4);
                 blockPos4 = blockPos4.offset(direction);
                 map.remove(blockPos4);
-                world.setBlockState(blockPos4, (BlockState)Blocks.MOVING_PISTON.getDefaultState().with(FACING, dir), 68);
-                world.setBlockEntity(blockPos4, PistonExtensionBlock.createBlockEntityPiston((BlockState)list2.get(l), dir, retract, false));
-                blockStates[j++] = blockState8;
+                BlockState blockState4 = (BlockState)Blocks.MOVING_PISTON.getDefaultState().with(FACING, dir);
+                world.setBlockState(blockPos4, blockState4, 68);
+                world.addBlockEntity(PistonExtensionBlock.createBlockEntityPiston(blockPos4, blockState4, (BlockState)list2.get(l), dir, retract, false));
+                blockStates[j++] = blockState9;
             }
 
             if (retract) {
                 PistonType pistonType = this.sticky ? PistonType.STICKY : PistonType.DEFAULT;
-                BlockState blockState4 = (BlockState)((BlockState)Blocks.PISTON_HEAD.getDefaultState().with(PistonHeadBlock.FACING, dir)).with(PistonHeadBlock.TYPE, pistonType);
-                blockState8 = (BlockState)((BlockState)Blocks.MOVING_PISTON.getDefaultState().with(PistonExtensionBlock.FACING, dir)).with(PistonExtensionBlock.TYPE, this.sticky ? PistonType.STICKY : PistonType.DEFAULT);
+                BlockState blockState5 = (BlockState)((BlockState)Blocks.PISTON_HEAD.getDefaultState().with(PistonHeadBlock.FACING, dir)).with(PistonHeadBlock.TYPE, pistonType);
+                blockState9 = (BlockState)((BlockState)Blocks.MOVING_PISTON.getDefaultState().with(PistonExtensionBlock.FACING, dir)).with(PistonExtensionBlock.TYPE, this.sticky ? PistonType.STICKY : PistonType.DEFAULT);
                 map.remove(blockPos);
-                world.setBlockState(blockPos, blockState8, 68);
-                world.setBlockEntity(blockPos, PistonExtensionBlock.createBlockEntityPiston(blockState4, dir, true, true));
+                world.setBlockState(blockPos, blockState9, 68);
+                world.addBlockEntity(PistonExtensionBlock.createBlockEntityPiston(blockPos, blockState9, blockState5, dir, true, true));
             }
 
-            BlockState blockState6 = Blocks.AIR.getDefaultState();
+            BlockState blockState7 = Blocks.AIR.getDefaultState();
             Iterator var25 = map.keySet().iterator();
 
             while(var25.hasNext()) {
                 BlockPos blockPos5 = (BlockPos)var25.next();
-                world.setBlockState(blockPos5, blockState6, 82);
+                world.setBlockState(blockPos5, blockState7, 82);
             }
 
             var25 = map.entrySet().iterator();
@@ -280,20 +286,20 @@ public class BlackstonePistonBlock extends PistonBlock implements IPistonLogic {
             while(var25.hasNext()) {
                 Map.Entry<BlockPos, BlockState> entry = (Map.Entry)var25.next();
                 blockPos7 = (BlockPos)entry.getKey();
-                BlockState blockState7 = (BlockState)entry.getValue();
+                BlockState blockState8 = (BlockState)entry.getValue();
+                blockState8.prepare(world, blockPos7, 2);
+                blockState7.updateNeighbors(world, blockPos7, 2);
                 blockState7.prepare(world, blockPos7, 2);
-                blockState6.updateNeighbors(world, blockPos7, 2);
-                blockState6.prepare(world, blockPos7, 2);
             }
 
             j = 0;
 
             int n;
             for(n = list3.size() - 1; n >= 0; --n) {
-                blockState8 = blockStates[j++];
+                blockState9 = blockStates[j++];
                 blockPos7 = (BlockPos)list3.get(n);
-                blockState8.prepare(world, blockPos7, 2);
-                world.updateNeighborsAlways(blockPos7, blockState8.getBlock());
+                blockState9.prepare(world, blockPos7, 2);
+                world.updateNeighborsAlways(blockPos7, blockState9.getBlock());
             }
 
             for(n = list.size() - 1; n >= 0; --n) {

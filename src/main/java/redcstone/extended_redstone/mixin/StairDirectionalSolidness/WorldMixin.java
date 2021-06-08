@@ -20,11 +20,11 @@ import javax.swing.*;
 public class WorldMixin {
 
     @Shadow
-    BlockState getBlockState(BlockPos pos){
+    public BlockState getBlockState(BlockPos pos){
         return null;
     };
     @Shadow
-    int getReceivedStrongRedstonePower(BlockPos pos) {
+    public int getReceivedStrongRedstonePower(BlockPos pos) {
         return 0;
     }
 
