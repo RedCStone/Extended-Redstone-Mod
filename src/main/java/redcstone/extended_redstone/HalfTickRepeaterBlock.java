@@ -15,15 +15,6 @@ public class HalfTickRepeaterBlock extends RepeaterBlock {
         super(settings);
     }
 
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!player.abilities.allowModifyWorld) {
-            return ActionResult.PASS;
-        } else {
-            world.setBlockState(pos, (BlockState)state.cycle(DELAY), 3);
-            return ActionResult.success(world.isClient);
-        }
-    }
-
     @Override
     protected int getUpdateDelayInternal(BlockState state) {
         return (Integer)state.get(DELAY);
