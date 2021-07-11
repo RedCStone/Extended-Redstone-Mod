@@ -1,4 +1,4 @@
-package redcstone.extended_redstone.mixin.BlackstonePiston;
+package redcstone.extended_redstone.mixin;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FacingBlock;

@@ -4,15 +4,12 @@
   "package": "redcstone.extended_redstone.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "BlackstonePiston.PistonBlockEntityMixin",
-    "BlackstonePiston.PistonBlockEntityRendererMixin",
-    "BlackstonePiston.PistonBlockMixin",
-    "BlackstonePiston.PistonHeadBlockMixin",
-    "BlockupdateRepeater.RedstoneWireBlockMixin",
-    "HalftickRepeater.RedstoneWireBlockMixin",
-    "SoftPowerBlock.WorldMixin",
-    "StairDirectionalSolidness.RedstoneWireBlockMixin",
-    "StairDirectionalSolidness.WorldMixin"
+    "RedstoneWireBlockMixin",
+    "WorldMixin",
+    "PistonBlockEntityMixin",
+    "PistonBlockEntityRendererMixin",
+    "PistonBlockMixin",
+    "PistonHeadBlockMixin"
   ],
   "client": [
   ],
