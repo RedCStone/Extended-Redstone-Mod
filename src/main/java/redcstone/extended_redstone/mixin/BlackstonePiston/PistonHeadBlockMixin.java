@@ -1,4 +1,4 @@
-package redcstone.extended_redstone.mixin;
+package redcstone.extended_redstone.mixin.BlackstonePiston;
 
 import net.minecraft.block.*;
 import net.minecraft.block.enums.PistonType;
